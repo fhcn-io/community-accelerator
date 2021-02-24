@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo
+  annotations:
+    kubernetes.io/ingress.class: "nginx"    
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/cluster-issuer: "acme-clusterissuer-http01"
+  labels:
+    use-http01-solver: "true"
+spec:
+  tls:
+  - hosts:
+    - "echossl.dev.lahorak8s.io"
+    secretName: echo-dev-lahorak8s-io
+  rules:
+  - host: "echossl.dev.lahorak8s.io"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: echo
+            port:
+              number: 80
